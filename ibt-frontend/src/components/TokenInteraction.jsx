@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import abi from "../IBTToken.json";
 
-const contractAddress = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853";
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 function TokenInteraction() {
   const [provider, setProvider] = useState(null);
@@ -51,13 +51,9 @@ function TokenInteraction() {
       const contract = new ethers.Contract(contractAddress, abi, signer);
   
       console.log("Fetching balance for account:", account);
+      console.log("Contract address:", contractAddress);
+  
       const balance = await contract.balanceOf(account);
-  
-      if (!balance) {
-        console.error("Balance is undefined or null.");
-        return;
-      }
-  
       console.log("Raw balance from contract:", balance);
   
       const formattedBalance = ethers.formatUnits(balance, 18);
@@ -68,6 +64,7 @@ function TokenInteraction() {
       console.error("Error fetching balance:", error);
     }
   };
+  
   
   const mintTokens = async () => {
     if (!signer || !account || !amount) {
