@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import abi from "../IBTToken.json";
+import "../styles/TokenInteraction.css";
 
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
@@ -23,15 +24,16 @@ function TokenInteraction() {
     console.log("MetaMask detected");
   
     try {
-      const newProvider = new ethers.BrowserProvider(window.ethereum); // Utilizare pentru ethers v6
+      const newProvider = new ethers.BrowserProvider(window.ethereum);
       const newSigner = await newProvider.getSigner();
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-  
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
       setProvider(newProvider);
-      setSigner(newSigner); // Stochează semnatarul
-      setAccount(accounts[0]); // Stochează contul conectat
-  
-      alert("Wallet connected: " + accounts[0]);
+      setSigner(newSigner);
+      setAccount(accounts[0]);
+      alert(`Wallet connected: ${accounts[0]}`);
     } catch (error) {
       console.error("Error connecting wallet:", error);
       alert("Failed to connect wallet. Please try again.");
@@ -40,13 +42,13 @@ function TokenInteraction() {
   
   
   
-
+  
   const getBalance = async () => {
     if (!signer || !account) {
       console.error("Signer or account not defined.");
       return;
     }
-  
+
     try {
       const contract = new ethers.Contract(contractAddress, abi, signer);
   
@@ -99,22 +101,15 @@ function TokenInteraction() {
   
   
   
-
+  
   // Pasul 5: Gestionarea evenimentelor MetaMask
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", (accounts) => {
-        if (accounts.length > 0) {
-          setAccount(accounts[0]);
-          console.log("Account changed:", accounts[0]);
-        } else {
-          setAccount("");
-          alert("Please connect to MetaMask.");
-        }
+        setAccount(accounts.length > 0 ? accounts[0] : "");
       });
 
       window.ethereum.on("chainChanged", (chainId) => {
-        console.log("Chain changed:", chainId);
         alert(`You have switched to network: ${parseInt(chainId, 16)}`);
       });
 
@@ -127,39 +122,30 @@ function TokenInteraction() {
 
   }, []);
 
-  const testPress = async () => {
-    console.log("Account:", account);
-
-    const newProvider = new ethers.BrowserProvider(window.ethereum); // ethers v6
-    const newSigner = await newProvider.getSigner();
-
-    try {
-        const gasEstimate = await contract.estimateGas.mint(account, ethers.parseUnits(amount, 18));
-        console.log("Estimated gas:", gasEstimate.toString());
-      } catch (error) {
-        console.error("Gas estimation failed:", error);
-      }
-      
-  }
-
   return (
     <div className="token-interaction">
       {!account ? (
-        <button onClick={connectWallet}>Connect Wallet</button>
+        <button className="btn connect-wallet" onClick={connectWallet}>
+          Connect Wallet
+        </button>
       ) : (
-        <div>
-          <p>Connected Account: {account}</p>
-          <button onClick={getBalance}>Get Balance</button>
-          <p>Balance: {balance} IBT</p>
-          <input
-            type="number"
-            placeholder="Amount to Mint"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <button onClick={mintTokens}>Mint Tokens</button>
-
-          <button onClick={testPress}> APASA </button>
+        <div className="card">
+          <p><strong>Connected Account:</strong> {account}</p>
+          <p><strong>Balance:</strong> {balance} IBT</p>
+          <div className="input-group">
+            <input
+              type="number"
+              placeholder="Amount to Mint"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+            <button className="btn mint" onClick={mintTokens}>
+              Mint Tokens
+            </button>
+          </div>
+          <button className="btn get-balance" onClick={getBalance}>
+            Get Balance
+          </button>
         </div>
       )}
     </div>

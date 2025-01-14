@@ -1,0 +1,40 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #2c3e50;
+  }
+  
+  .blockchain-switch {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .blockchain-switch button {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #333;
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  
+  .blockchain-switch button.active {
+    background: #3498db;
+    color: #fff;
+    border-color: #3498db;
+  }
+  
+  .blockchain-switch button:hover:not(.active) {
+    background: #e8e8e8;
+  }
+  
